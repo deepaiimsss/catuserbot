@@ -88,21 +88,29 @@ async def amireallyalive(event):
 
 
 temp = """{ALIVE_TEXT}
-**{EMOJI} Database :** `{dbhealth}`
-**{EMOJI} Telethon Version :** `{telever}`
-**{EMOJI} Catuserbot Version :** `{catver}`
-**{EMOJI} Python Version :** `{pyver}`
-**{EMOJI} Uptime :** `{uptime}`
-**{EMOJI} Master:** {mention}"""
+
+      ┌───⚡───┐
+**{EMOJI} ᴄᴀᴛᴜsᴇʀʙᴏᴛ ᴠᴇʀsɪᴏɴ :** `{catver}`
+**{EMOJI} ᴛᴇʟᴇᴛʜᴏɴ :** `{telever}`
+**{EMOJI} ᴘʏᴛʜᴏɴ :** `{pyver}`
+**{EMOJI} ᴜᴘᴛɪᴍᴇ :** `{uptime}`
+**{EMOJI} ᴍᴀsᴛᴇʀ :** {mention}
+**{EMOJI} ᴅᴀᴛᴀʙᴀsᴇ :** `{dbhealth}`
+      └───⚡───┘
+
+ {EMOJI} ᴘɪɴɢ : `{ping}` ms
+└───────+⚡+───────┘
+      ───✥───
+***{EMOJI} ᴄʀᴇᴀᴛᴏʀ ᴏғ ᴄᴀᴛᴜsᴇʀʙᴏᴛ & sᴜᴘᴘᴏʀᴛᴇʀs***"""
 
 
 def catalive_text():
-    EMOJI = gvarstatus("ALIVE_EMOJI") or "  ✥ "
-    cat_caption = "**Catuserbot is Up and Running**\n"
-    cat_caption += f"**{EMOJI} Telethon version :** `{version.__version__}\n`"
-    cat_caption += f"**{EMOJI} Catuserbot Version :** `{userbot.__version__}`\n"
-    cat_caption += f"**{EMOJI} Python Version :** `{python_version()}\n`"
-    cat_caption += f"**{EMOJI} Master:** {mention}\n"
+    EMOJI = gvarstatus("ALIVE_EMOJI") or "✥"
+    cat_caption = "***Catuserbot is Up and Running***\n"
+    cat_caption += f"***{EMOJI} Telethon Version :** `{version.__version__}`\n"
+    cat_caption += f"***{EMOJI} Catuserbot Version :** `{userbot.__version__}`\n"
+    cat_caption += f"***{EMOJI} Python Version :** `{python_version()}`\n"
+    cat_caption += f"***{EMOJI} Master :** {mention}\n"
     return cat_caption
 
 
@@ -128,4 +136,6 @@ async def am_i_really_alive(event):
 @catub.tgbot.on(CallbackQuery(data=re.compile(b"stats")))
 async def on_plug_in_callback_query_handler(event):
     statstext = await catalive(StartTime)
+    if len(statstext) > 200:
+        statstext = statstext[:197] + "..."
     await event.answer(statstext, cache_time=0, alert=True)
