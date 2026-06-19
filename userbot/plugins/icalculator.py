@@ -1,6 +1,4 @@
-# This file is a part of < https://github.com/TeamUltroid/Ultroid/ >
-# Original file can be found at https://github.com/TeamUltroid/Ultroid/blob/main/plugins/calculator.py
-# Ported to cat userbot by @realnub. If you remove these three lines then you are a pure 100% gay, real idiot and you will die in hell for sure.
+
 
 import re
 

@@ -111,11 +111,17 @@ async def build_article(
 
 async def help_article(event):
     help_info = main_menu()
+    media = None
+    if HELP_PIC := gvarstatus("HELP_PIC"):
+        CAT = list(HELP_PIC.split())
+        PIC = list(CAT)
+        media = random.choice(PIC)
     return await build_article(
         event,
         title="Help Menu",
         description="Help menu for CatUserbot.",
         thumbnail=get_thumb("help.png"),
+        media=media,
         text=help_info[0],
         buttons=help_info[1],
     )

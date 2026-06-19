@@ -26,6 +26,7 @@ var_list = [
     "DEFAULT_USER",
     "DIGITAL_PIC",
     "HELP_EMOJI",
+    "HELP_PIC",
     "HELP_TEXT",
     "IALIVE_PIC",
     "MAX_FLOOD_IN_PMS",
