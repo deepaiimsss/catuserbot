@@ -1,10 +1,10 @@
-from telethon.errors.rpcerrorlist import YouBlockedUserError
-from telethon.tl.functions.contacts import UnblockRequest as unblock
+import os
+
+import requests
 
 from userbot import catub
 
 from ..core.managers import edit_delete, edit_or_reply
-from ..helpers.functions import delete_conv
 from ..helpers.utils import reply_id
 
 plugin_category = "utils"
@@ -14,7 +14,7 @@ plugin_category = "utils"
     pattern="ctm$",
     command=("ctm", plugin_category),
     info={
-        "header": "Upload media to Catbox via @CatBoxyBot",
+        "header": "Upload media to Catbox.moe",
         "description": "Reply to any media (photo, document, video, sticker, gif, audio, voice) with this command to upload it to Catbox and get the link.",
         "usage": "{tr}ctm",
     },
@@ -26,23 +26,29 @@ async def _(event):
     if not replied or not replied.media:
         return await edit_delete(event, "`Reply to a media message to upload to Catbox`", 10)
 
-    chat = "@CatBoxyBot"
-    catevent = await edit_or_reply(event, "`Uploading to Catbox via @CatBoxyBot...`")
+    catevent = await edit_or_reply(event, "`Downloading media...`")
+    
+    try:
+        downloaded_file_name = await event.client.download_media(replied.media)
+    except Exception as e:
+        return await edit_or_reply(catevent, f"**Error downloading:** `{e}`")
 
-    async with event.client.conversation(chat) as conv:
-        try:
-            msg_flag = await conv.send_file(replied.media)
-        except YouBlockedUserError:
-            await edit_or_reply(catevent, "**Error:** Trying to unblock @CatBoxyBot & retry, wait a sec...")
-            await catub(unblock("CatBoxyBot"))
-            msg_flag = await conv.send_file(replied.media)
-
-        try:
-            response = await conv.get_response()
-            await event.client.send_read_acknowledge(conv.chat_id)
+    await edit_or_reply(catevent, "`Uploading to Catbox.moe...`")
+    
+    try:
+        url = "https://catbox.moe/user/api.php"
+        data = {"reqtype": "fileupload"}
+        with open(downloaded_file_name, "rb") as f:
+            files = {"fileToUpload": f}
+            response = requests.post(url, data=data, files=files)
+            
+        if response.status_code == 200:
             await catevent.delete()
-            await event.client.send_message(event.chat_id, response, reply_to=reply_to)
-        except Exception as e:
-            await edit_or_reply(catevent, f"**Error:** `{e}`")
-        finally:
-            await delete_conv(event, chat, msg_flag)
+            await event.client.send_message(event.chat_id, response.text, reply_to=reply_to)
+        else:
+            await edit_or_reply(catevent, f"**Error:** `Failed to upload, status code {response.status_code}`")
+    except Exception as e:
+        await edit_or_reply(catevent, f"**Error:** `{e}`")
+    finally:
+        if downloaded_file_name and os.path.exists(downloaded_file_name):
+            os.remove(downloaded_file_name)

@@ -1,4 +1,3 @@
-# By @FeelDeD
 from userbot import catub
 from ..core.managers import edit_delete, edit_or_reply
 from ..helpers.utils import reply_id

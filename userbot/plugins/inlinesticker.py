@@ -1,4 +1,3 @@
-# By @FeelDeD
 import random
 
 from userbot import catub

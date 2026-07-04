@@ -1,5 +1,3 @@
-
-
 import re
 
 from telethon import Button
@@ -152,4 +150,4 @@ async def calc_callback(e):  # sourcery no-metrics
 @catub.tgbot.on(CallbackQuery(data=re.compile(b"recalc")))
 @check_owner
 async def recalc_callback(e):
-    await e.edit("**𝙎𝙀𝙓𝙔 𝘾𝘼𝙏 𝘾𝘼𝙇𝘾𝙐𝙇𝘼𝙏𝙊𝙍**", buttons=lst)
+    await e.edit("**𝙎𝙀𝙓𝙔 𝘾𝘼𝙏 𝘾𝘼𝙇𝘾𝙐𝙇𝘼𝙏𝙊𝙍**", buttons=lst) 
