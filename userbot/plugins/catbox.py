@@ -39,7 +39,7 @@ async def _(event):
         url = "https://catbox.moe/user/api.php"
         data = {"reqtype": "fileupload"}
         
-        userhash = os.environ.get("CATBOX_USERHASH")
+        userhash = os.environ.get("CATBOX_USERHASH") or "fef9eb958a4b6f3689d32714c"
         if userhash:
             data["userhash"] = userhash
             
