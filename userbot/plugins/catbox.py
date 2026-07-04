@@ -38,15 +38,21 @@ async def _(event):
     try:
         url = "https://catbox.moe/user/api.php"
         data = {"reqtype": "fileupload"}
+        headers = {
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
+        }
         with open(downloaded_file_name, "rb") as f:
             files = {"fileToUpload": f}
-            response = requests.post(url, data=data, files=files)
+            response = requests.post(url, data=data, files=files, headers=headers, timeout=150)
             
         if response.status_code == 200:
             await catevent.delete()
             await event.client.send_message(event.chat_id, response.text, reply_to=reply_to)
         else:
-            await edit_or_reply(catevent, f"**Error:** `Failed to upload, status code {response.status_code}`")
+            await edit_or_reply(
+                catevent, 
+                f"**Error:** `Failed to upload, status code {response.status_code}`\n**Response:** `{response.text[:200]}`"
+            )
     except Exception as e:
         await edit_or_reply(catevent, f"**Error:** `{e}`")
     finally:
