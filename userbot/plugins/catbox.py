@@ -38,6 +38,11 @@ async def _(event):
     try:
         url = "https://catbox.moe/user/api.php"
         data = {"reqtype": "fileupload"}
+        
+        userhash = os.environ.get("CATBOX_USERHASH")
+        if userhash:
+            data["userhash"] = userhash
+            
         headers = {
             "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
         }
@@ -49,10 +54,10 @@ async def _(event):
             await catevent.delete()
             await event.client.send_message(event.chat_id, response.text, reply_to=reply_to)
         else:
-            await edit_or_reply(
-                catevent, 
-                f"**Error:** `Failed to upload, status code {response.status_code}`\n**Response:** `{response.text[:200]}`"
-            )
+            err_msg = f"**Error:** `Failed to upload, status code {response.status_code}`\n**Response:** `{response.text[:200]}`"
+            if "invalid uploader" in response.text.lower() or response.status_code == 412:
+                err_msg += "\n\n**Tip:** Catbox blocks anonymous uploads from VPS IP ranges. Please set the `CATBOX_USERHASH` environment variable."
+            await edit_or_reply(catevent, err_msg)
     except Exception as e:
         await edit_or_reply(catevent, f"**Error:** `{e}`")
     finally:
